@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1120" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Профтест" />
+  <title>Профтест от Турара — Найди свою сферу</title>
+  <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%D0%9F%D1%80%D0%BE%D1%84%D1%82%D0%B5%D1%81%D1%82%20%D0%BE%D1%82%20%D0%A2%D1%83%D1%80%D0%B0%D1%80%D0%B0%22%2C%22short_name%22%3A%22%D0%9F%D1%80%D0%BE%D1%84%D1%82%D0%B5%D1%81%D1%82%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230b1120%22%2C%22theme_color%22%3A%22%230b1120%22%7D" />
+  <style>
+    :root {
+      --bg: #0b1120;
+      --surface: #131c31;
+      --card: #19243d;
+      --card-active: #223254;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-dark: #0284c7;
+      --emerald: #10b981;
+      --emerald-dark: #059669;
+      --border: rgba(148, 163, 184, 0.16);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      line-height: 1.48;
+      overscroll-behavior-y: none;
+    }
+
+    body {
+      padding-top: calc(12px + var(--safe-top));
+      padding-bottom: calc(92px + var(--safe-bottom));
+      padding-left: 14px;
+      padding-right: 14px;
+      background-image:
+        radial-gradient(circle at top center, rgba(56, 189, 248, 0.12), transparent 55%),
+        linear-gradient(180deg, #090e1a 0%, var(--bg) 100%);
+    }
+
+    .app-shell {
+      max-width: 540px;
+      margin: 0 auto;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(19, 28, 49, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 11px 15px;
+      margin-bottom: 14px;
+      position: sticky;
+      top: calc(8px + var(--safe-top));
+      z-index: 20;
+    }
+
+    .app-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .app-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, var(--accent), var(--emerald));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: #06121e;
+      flex-shrink: 0;
+    }
+
+    .app-title-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .app-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .pill-badge {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      padding: 5px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 20px 18px;
+      box-shadow: 0 22px 50px rgba(0, 0, 0, 0.42);
+      animation: fadeSlideIn 0.24s ease;
+    }
+
+    @keyframes fadeSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      line-height: 1.22;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+
+    h2 {
+      font-size: 1.18rem;
+      line-height: 1.3;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    p {
+      color: var(--muted);
+      font-size: 0.94rem;
+      margin-bottom: 14px;
+    }
+
+    .spheres-list {
+      display: grid;
+      gap: 8px;
+      margin: 14px 0 18px;
+    }
+
+    .sphere-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 0.86rem;
+      color: #e2e8f0;
+    }
+
+    .sphere-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      background: rgba(56, 189, 248, 0.14);
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin-bottom: 8px;
+    }
+
+    .text-input {
+      width: 100%;
+      min-height: 50px;
+      padding: 13px 15px;
+      border-radius: 15px;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .text-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.16);
+    }
+
+    .progress-wrap {
+      margin-bottom: 18px;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: var(--bg);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--emerald));
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
+
+    .question-text {
+      font-size: 1.12rem;
+      font-weight: 700;
+      line-height: 1.38;
+      margin-bottom: 16px;
+    }
+
+    .options {
+      display: grid;
+      gap: 11px;
+    }
+
+    .option-card {
+      width: 100%;
+      min-height: 58px;
+      text-align: left;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 14px 16px;
+      font-size: 0.95rem;
+      line-height: 1.42;
+      color: var(--text);
+      cursor: pointer;
+      transition: transform 0.1s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .option-card:active {
+      transform: scale(0.985);
+    }
+
+    .option-card.selected {
+      background: var(--card-active);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+      font-weight: 600;
+    }
+
+    .result-hero {
+      background: linear-gradient(145deg, rgba(56, 189, 248, 0.14), rgba(16, 185, 129, 0.1));
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      border-radius: 18px;
+      padding: 18px 16px;
+      margin-bottom: 18px;
+    }
+
+    .hero-tag {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .main-sphere {
+      font-size: 1.26rem;
+      font-weight: 800;
+      line-height: 1.28;
+      margin-bottom: 8px;
+    }
+
+    .second-sphere {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #34d399;
+      margin-bottom: 10px;
+    }
+
+    .examples-box {
+      background: rgba(11, 17, 32, 0.65);
+      border-radius: 13px;
+      padding: 12px;
+      font-size: 0.87rem;
+      color: #cbd5e1;
+      margin-top: 10px;
+    }
+
+    .bar-item {
+      margin-bottom: 12px;
+    }
+
+    .bar-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      font-size: 0.85rem;
+      margin-bottom: 5px;
+    }
+
+    .bar-score {
+      font-weight: 700;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .bar-track {
+      height: 8px;
+      background: var(--bg);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-dark), var(--accent));
+      border-radius: 999px;
+    }
+
+    .dock-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(11, 17, 32, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border);
+      padding: 10px 14px calc(10px + var(--safe-bottom));
+      z-index: 30;
+    }
+
+    .dock-inner {
+      max-width: 540px;
+      margin: 0 auto;
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      min-height: 50px;
+      border: none;
+      border-radius: 15px;
+      padding: 12px 18px;
+      font-size: 0.96rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: transform 0.1s ease, opacity 0.15s ease, background 0.15s ease;
+    }
+
+    .btn:active:not(:disabled) {
+      transform: scale(0.985);
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      flex: 1;
+      background: var(--accent);
+      color: #06121e;
+    }
+
+    .btn-wa {
+      width: 100%;
+      background: var(--emerald);
+      color: #ffffff;
+    }
+
+    .btn-wa:hover {
+      background: var(--emerald-dark);
+    }
+
+    .btn-secondary {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .extra-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .status-msg {
+      margin-top: 10px;
+      font-size: 0.86rem;
+      color: #34d399;
+      font-weight: 600;
+      min-height: 18px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="top-bar">
+      <div class="app-brand">
+        <div class="app-logo">ПТ</div>
+        <div class="app-title-group">
+          <div class="app-name">Профтест от Турара</div>
+          <div class="app-sub">Мобильный мини-тест</div>
+        </div>
+      </div>
+      <div class="pill-badge">8 сфер · 16 шагов</div>
+    </header>
+
+    <!-- Главный экран -->
+    <main id="start-screen" class="panel">
+      <h1>Найди свою сферу деятельности</h1>
+      <p>16 коротких шагов займут около 3 минут. Определим две самые подходящие сферы и подготовим отчёт, который можно отправить Турару в WhatsApp.</p>
+
+      <div class="spheres-list">
+        <div class="sphere-row"><span class="sphere-num">1</span><span>Рабочие специальности, техника и строительство</span></div>
+        <div class="sphere-row"><span class="sphere-num">2</span><span>Военная служба, правоохранительные органы и безопасность</span></div>
+        <div class="sphere-row"><span class="sphere-num">3</span><span>Госслужба, дипломатия и управление</span></div>
+        <div class="sphere-row"><span class="sphere-num">4</span><span>Медицина и здоровье</span></div>
+        <div class="sphere-row"><span class="sphere-num">5</span><span>Торговля, бизнес и управление</span></div>
+        <div class="sphere-row"><span class="sphere-num">6</span><span>IT, финансы и работа с данными</span></div>
+        <div class="sphere-row"><span class="sphere-num">7</span><span>Творчество, дизайн и медиа</span></div>
+        <div class="sphere-row"><span class="sphere-num">8</span><span>Образование, сервис и работа с людьми</span></div>
+      </div>
+
+      <label class="input-label" for="user-name">Как к вам обращаться?</label>
+      <input
+        id="user-name"
+        class="text-input"
+        type="text"
+        maxlength="50"
+        placeholder="Введите имя (необязательно)"
+      />
+    </main>
+
+    <!-- Экран вопросов -->
+    <main id="quiz-screen" class="panel hidden">
+      <div class="progress-wrap">
+        <div class="progress-meta">
+          <span id="q-counter">Шаг 1 из 16</span>
+          <span id="q-percent">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+
+      <div class="question-text" id="question-text"></div>
+      <div class="options" id="options-list"></div>
+    </main>
+
+    <!-- Экран результата -->
+    <main id="result-screen" class="panel hidden">
+      <h2 id="result-greeting">Ваш результат</h2>
+      <div class="result-hero" id="result-hero"></div>
+
+      <h2>Все 8 сфер по баллам</h2>
+      <div id="bars-container"></div>
+
+      <div class="extra-actions">
+        <button type="button" class="btn btn-secondary" onclick="copyReport()">Скопировать</button>
+        <button type="button" class="btn btn-secondary" onclick="restartTest()">Пройти заново</button>
+      </div>
+      <div class="status-msg" id="status-msg"></div>
+    </main>
+  </div>
+
+  <!-- Нижняя панель действий под большой палец -->
+  <div class="dock-bar" id="dock-start">
+    <div class="dock-inner">
+      <button type="button" class="btn btn-primary" onclick="startTest()">Начать тест</button>
+    </div>
+  </div>
+
+  <div class="dock-bar hidden" id="dock-quiz">
+    <div class="dock-inner">
+      <button type="button" class="btn btn-secondary" id="prev-btn" onclick="prevQuestion()">Назад</button>
+      <button type="button" class="btn btn-primary" id="next-btn" onclick="nextQuestion()" disabled>Далее</button>
+    </div>
+  </div>
+
+  <div class="dock-bar hidden" id="dock-result">
+    <div class="dock-inner">
+      <a id="wa-share-link" class="btn btn-wa" href="#" target="_blank" rel="noopener noreferrer">
+        Отправить результат Турару в WhatsApp
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const TARGET_WHATSAPP = "77786420582";
+    const MAX_POSSIBLE_SCORE = 20;
+
+    const SPHERES = {
+      TECH: {
+        title: "Рабочие специальности, техника и строительство",
+        desc: "Вам ближе практический результат своими руками, работа с инструментом, оборудованием, конструкциями и техникой.",
+        examples: "Электрики, сварщики, строители, отделочники, автомеханики, мастера на производстве"
+      },
+      FORCE: {
+        title: "Военная служба, правоохранительные органы и безопасность",
+        desc: "Вам близки дисциплина, устав, защита людей и порядка, быстрая реакция в сложных и ответственных ситуациях.",
+        examples: "Военные, полиция, следствие, МЧС и спасатели, служба безопасности"
+      },
+      GOV: {
+        title: "Госслужба, дипломатия и управление",
+        desc: "Вам подходят работа по закону и регламентам, официальные переговоры, представительство и решение системных задач.",
+        examples: "Дипломаты, сотрудники государственных органов, ведомств и административного аппарата"
+      },
+      MED: {
+        title: "Медицина и здоровье",
+        desc: "Вам важны забота о здоровье и самочувствии людей, точность, внимание к деталям и помощь в восстановлении.",
+        examples: "Врачи, медсёстры/медбратья, диагностика, реабилитация, фармация"
+      },
+      BIZ: {
+        title: "Торговля, бизнес и управление",
+        desc: "Вам понятна логика рынка, переговоров, спроса и оборота: вы готовы брать на себя коммерческую инициативу и результат.",
+        examples: "Торговцы (розница и опт), предприниматели, менеджеры по продажам, руководители бизнеса"
+      },
+      DATA: {
+        title: "IT, финансы и работа с данными",
+        desc: "Ваша сила в цифрах, логике, расчётах, структурах, таблицах и проверке фактов без лишних эмоций.",
+        examples: "Программисты, аналитики, бухгалтеры, экономисты, сметчики, логисты"
+      },
+      ART: {
+        title: "Творчество, дизайн и медиа",
+        desc: "Вам важно создавать визуальные образы, идеи, оформление и подачу, которые вызывают живой отклик у людей.",
+        examples: "Дизайнеры, архитекторы, мастера декора, фото/видео, контент и реклама"
+      },
+      PEOPLE: {
+        title: "Образование, сервис и работа с людьми",
+        desc: "Вам легко находить общий язык с людьми, обучать, подсказывать, поддерживать и создавать комфортный сервис.",
+        examples: "Учителя, тренеры, наставники, специалисты клиентского сервиса, социальная сфера"
+      }
+    };
+
+    const QUESTIONS = [
+      {
+        q: "1. Какая задача приносит вам наибольшее удовлетворение?",
+        opts: [
+          { label: "А. Собрать, починить или построить своими руками надёжную вещь.", scores: { TECH: 3, ART: 1 } },
+          { label: "Б. Защитить людей, пресечь нарушение и навести порядок в сложной обстановке.", scores: { FORCE: 3, GOV: 1 } },
+          { label: "В. Облегчить человеку боль, помочь восстановиться и поддержать его здоровье.", scores: { MED: 3, PEOPLE: 1 } },
+          { label: "Г. Найти выгодную сделку, организовать поставку или заработать на обороте.", scores: { BIZ: 3, DATA: 1 } }
+        ]
+      },
+      {
+        q: "2. Как вы чувствуете себя в ситуации, где нужно строго соблюдать правила, закон и субординацию?",
+        opts: [
+          { label: "А. Отлично — чёткий устав, приказ и дисциплина дают понятный порядок действий.", scores: { FORCE: 3, TECH: 1 } },
+          { label: "Б. Естественно — законы, протоколы и официальные регламенты помогают управлять большими системами.", scores: { GOV: 3, DATA: 1 } },
+          { label: "В. Спокойно, если это медицинские стандарты и правила безопасности для жизни человека.", scores: { MED: 3, FORCE: 1 } },
+          { label: "Г. Тесновато — мне ближе свобода маневра, гибкость и быстрые решения без лишней бюрократии.", scores: { BIZ: 3, ART: 1 } }
+        ]
+      },
+      {
+        q: "3. Представьте сложный спор между двумя сторонами. Какую роль вы бы заняли?",
+        opts: [
+          { label: "А. Официального представителя или дипломата: выслушаю позиции и найду законный компромисс.", scores: { GOV: 3, PEOPLE: 1 } },
+          { label: "Б. Разберусь в фактах, документах и расчётах, чтобы доказать правоту цифрами.", scores: { DATA: 3, GOV: 1 } },
+          { label: "В. Наведу порядок твёрдой рукой, чтобы никто не нарушал установленные границы.", scores: { FORCE: 3, BIZ: 1 } },
+          { label: "Г. Успокою обе стороны, сглажу острые углы и помогу людям услышать друг друга.", scores: { PEOPLE: 3, MED: 1 } }
+        ]
+      },
+      {
+        q: "4. Что бы вы выбрали в качестве главного рабочего инструмента?",
+        opts: [
+          { label: "А. Профессиональный электроинструмент, сварочный аппарат, станок или измерительные приборы.", scores: { TECH: 3, DATA: 1 } },
+          { label: "Б. Компьютер с таблицами, кодом, чертежами или финансовыми отчётами.", scores: { DATA: 3, TECH: 1 } },
+          { label: "В. Графический планшет, камеру, эскизы, макеты или материалы для оформления.", scores: { ART: 3, TECH: 1 } },
+          { label: "Г. Живое слово, телефон, переговоры и личные встречи с клиентами или партнёрами.", scores: { BIZ: 3, PEOPLE: 1 } }
+        ]
+      },
+      {
+        q: "5. Если рядом кому-то резко стало плохо или случилось ЧП, ваша первая реакция:",
+        opts: [
+          { label: "А. Без паники подхожу, оцениваю состояние человека и оказываю первую помощь.", scores: { MED: 3, FORCE: 1 } },
+          { label: "Б. Беру на себя координацию: вызываю службы, ограждаю место и обеспечиваю безопасность.", scores: { FORCE: 3, GOV: 1 } },
+          { label: "В. Быстро проверяю, не связана ли авария с электрикой, газом или техникой, и отключаю питание.", scores: { TECH: 3, FORCE: 1 } },
+          { label: "Г. Поддерживаю пострадавшего морально, связываюсь с близкими и помогаю с организацией.", scores: { PEOPLE: 3, MED: 1 } }
+        ]
+      },
+      {
+        q: "6. Какой масштаб задач вас вдохновляет больше всего?",
+        opts: [
+          { label: "А. Участвовать в работе государственных институтов, ведомств или международных отношений.", scores: { GOV: 3, FORCE: 1 } },
+          { label: "Б. Развивать своё торговое дело, магазин, цех или коммерческий проект.", scores: { BIZ: 3, TECH: 1 } },
+          { label: "В. Создавать красивые проекты, интерьеры, дизайн или контент, который цепляет людей.", scores: { ART: 3, BIZ: 1 } },
+          { label: "Г. Обучать других, передавать опыт и видеть, как люди растут благодаря вашей поддержке.", scores: { PEOPLE: 3, GOV: 1 } }
+        ]
+      },
+      {
+        q: "7. Какие знания вам легче всего даются и по-настоящему интересны?",
+        opts: [
+          { label: "А. Устройство механизмов, электрика, свойства металлов, дерева и строительных материалов.", scores: { TECH: 3, ART: 1 } },
+          { label: "Б. Анатомия, диагностика, действие лекарств, профилактика и восстановление организма.", scores: { MED: 3, DATA: 1 } },
+          { label: "В. Право, государственное устройство, история дипломатии и правила ведения переговоров.", scores: { GOV: 3, PEOPLE: 1 } },
+          { label: "Г. Математика, алгоритмы, экономика, бухгалтерия и анализ больших таблиц.", scores: { DATA: 3, BIZ: 1 } }
+        ]
+      },
+      {
+        q: "8. Какая рабочая атмосфера вам ближе всего?",
+        opts: [
+          { label: "А. Мастерская, стройплощадка, цех или выездные объекты, где виден физический результат.", scores: { TECH: 3, FORCE: 1 } },
+          { label: "Б. Клиника, лаборатория, реабилитационный центр или аптека, где всё стерильно и точно.", scores: { MED: 3, DATA: 1 } },
+          { label: "В. Рынок, торговый зал, офис продаж или переговоры с поставщиками и клиентами.", scores: { BIZ: 3, PEOPLE: 1 } },
+          { label: "Г. Учебный класс, тренировочный зал, центр консультаций или живое общение с людьми.", scores: { PEOPLE: 3, ART: 1 } }
+        ]
+      },
+      {
+        q: "9. Что для вас означает «настоящая ответственность»?",
+        opts: [
+          { label: "А. Отвечать за безопасность людей, порядок на территории и выполнение служебного долга.", scores: { FORCE: 3, GOV: 1 } },
+          { label: "Б. Отвечать за здоровье и жизнь пациента, не допустить ошибки в диагнозе или уходе.", scores: { MED: 3, FORCE: 1 } },
+          { label: "В. Отвечать за качество сборки, монтажа или конструкции, чтобы она прослужила десятилетиями.", scores: { TECH: 3, DATA: 1 } },
+          { label: "Г. Отвечать за финансовый результат, прибыль, зарплату команды и выполнение договора.", scores: { BIZ: 3, GOV: 1 } }
+        ]
+      },
+      {
+        q: "10. Как вы относитесь к работе с официальными документами, договорами и протоколами?",
+        opts: [
+          { label: "А. Уверенно — умею грамотно составить официальное письмо, приказ или соглашение.", scores: { GOV: 3, BIZ: 1 } },
+          { label: "Б. Люблю точность в сметах, накладных, балансах и базах данных.", scores: { DATA: 3, BIZ: 1 } },
+          { label: "В. Отношусь как к необходимой фиксации приёма, процедур или проверок.", scores: { MED: 3, GOV: 1 } },
+          { label: "Г. Предпочитаю минимум бумаг — мне важнее живое творчество или практика.", scores: { ART: 3, TECH: 1 } }
+        ]
+      },
+      {
+        q: "11. Если бы вы открывали своё направление, чем бы занялись?",
+        opts: [
+          { label: "А. Оптово-розничной торговлей, магазином или поставками востребованных товаров.", scores: { BIZ: 3, DATA: 1 } },
+          { label: "Б. Мастерской по ремонту, сварке, электромонтажу или строительству под ключ.", scores: { TECH: 3, BIZ: 1 } },
+          { label: "В. Дизайн-студией, производством авторского декора, фото/видео или рекламой.", scores: { ART: 3, BIZ: 1 } },
+          { label: "Г. Учебным центром, курсами, спортивной секцией или консультационным бюро.", scores: { PEOPLE: 3, GOV: 1 } }
+        ]
+      },
+      {
+        q: "12. Какая суперспособность пригодилась бы вам в работе больше всего?",
+        opts: [
+          { label: "А. Мгновенно замечать скрытую угрозу, ложь или нарушение порядка.", scores: { FORCE: 3, GOV: 1 } },
+          { label: "Б. Точно определять причину недомогания человека и подбирать правильное лечение.", scores: { MED: 3, PEOPLE: 1 } },
+          { label: "В. Находить общий язык с любым представителем власти, ведомства или другой страны.", scores: { GOV: 3, PEOPLE: 1 } },
+          { label: "Г. Видеть в голове готовую картинку будущего изделия, интерьера или образа.", scores: { ART: 3, TECH: 1 } }
+        ]
+      },
+      {
+        q: "13. Что вас сильнее всего раздражает в работе?",
+        opts: [
+          { label: "А. Беспорядок, нарушение закона, расхлябанность и невыполнение приказов.", scores: { FORCE: 3, GOV: 1 } },
+          { label: "Б. Халатность по отношению к здоровью, гигиене и самочувствию людей.", scores: { MED: 3, PEOPLE: 1 } },
+          { label: "В. Ошибки в расчётах, сбои в программах и нестыковки в цифрах.", scores: { DATA: 3, TECH: 1 } },
+          { label: "Г. Серость, шаблонность и запрет на нестандартные творческие решения.", scores: { ART: 3, BIZ: 1 } }
+        ]
+      },
+      {
+        q: "14. Какой формат общения с людьми вам даётся легче всего?",
+        opts: [
+          { label: "А. Объяснять, учить, терпеливо подсказывать и помогать человеку разобраться в теме.", scores: { PEOPLE: 3, MED: 1 } },
+          { label: "Б. Убеждать купить, договариваться о цене, условиях поставки и выгоде.", scores: { BIZ: 3, GOV: 1 } },
+          { label: "В. Вести официальный приём, соблюдать дипломатический этикет и протокол.", scores: { GOV: 3, FORCE: 1 } },
+          { label: "Г. Коротко и по делу: обсудить чертёж, задачу на объекте и приступить к работе.", scores: { TECH: 3, DATA: 1 } }
+        ]
+      },
+      {
+        q: "15. Какой проект вы бы с гордостью показали через 5 лет?",
+        opts: [
+          { label: "А. Автоматизированную систему, программу или точную аналитическую модель, экономящую миллионы.", scores: { DATA: 3, TECH: 1 } },
+          { label: "Б. Узнаваемый визуальный стиль, оформленные пространства или творческие работы.", scores: { ART: 3, PEOPLE: 1 } },
+          { label: "В. Сотни благодарных людей, которым вы помогли сохранить здоровье или встать на ноги.", scores: { MED: 3, PEOPLE: 1 } },
+          { label: "Г. Важные государственные или общественные инициативы, реализованные при вашем участии.", scores: { GOV: 3, FORCE: 1 } }
+        ]
+      },
+      {
+        q: "16. Если коротко: в чём ваша главная природная сила?",
+        opts: [
+          { label: "А. В золотых руках, технической смекалке и умении делать вещи на совесть.", scores: { TECH: 3, ART: 1 } },
+          { label: "Б. В стойкости, дисциплине и готовности защищать порядок и безопасность.", scores: { FORCE: 3, MED: 1 } },
+          { label: "В. В умении работать с информацией, цифрами, логикой и сложными системами.", scores: { DATA: 3, GOV: 1 } },
+          { label: "Г. В чуткости к людям, умении поддержать, научить и найти подход к каждому.", scores: { PEOPLE: 3, ART: 1 } }
+        ]
+      }
+    ];
+
+    let currentIndex = 0;
+    let userAnswers = new Array(QUESTIONS.length).fill(null);
+    let userName = "";
+    let lastReportText = "";
+
+    function setScreen(screenName) {
+      ["start", "quiz", "result"].forEach((name) => {
+        document.getElementById(`${name}-screen`).classList.toggle("hidden", name !== screenName);
+        document.getElementById(`dock-${name}`).classList.toggle("hidden", name !== screenName);
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function startTest() {
+      const rawName = document.getElementById("user-name").value.trim();
+      userName = rawName || "Участник";
+      currentIndex = 0;
+      userAnswers = new Array(QUESTIONS.length).fill(null);
+      setScreen("quiz");
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const item = QUESTIONS[currentIndex];
+      const pct = Math.round((currentIndex / QUESTIONS.length) * 100);
+
+      document.getElementById("q-counter").textContent = `Шаг ${currentIndex + 1} из ${QUESTIONS.length}`;
+      document.getElementById("q-percent").textContent = `${pct}%`;
+      document.getElementById("progress-fill").style.width = `${pct}%`;
+      document.getElementById("question-text").textContent = item.q;
+
+      const optionsEl = document.getElementById("options-list");
+      optionsEl.innerHTML = "";
+
+      item.opts.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "option-card" + (userAnswers[currentIndex] === idx ? " selected" : "");
+        btn.textContent = opt.label;
+        btn.onclick = () => {
+          userAnswers[currentIndex] = idx;
+          renderQuestion();
+        };
+        optionsEl.appendChild(btn);
+      });
+
+      document.getElementById("prev-btn").disabled = currentIndex === 0;
+      const nextBtn = document.getElementById("next-btn");
+      nextBtn.disabled = userAnswers[currentIndex] === null;
+      nextBtn.textContent = currentIndex === QUESTIONS.length - 1 ? "Результат" : "Далее";
+    }
+
+    function prevQuestion() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion();
+      }
+    }
+
+    function nextQuestion() {
+      if (userAnswers[currentIndex] === null) return;
+      if (currentIndex < QUESTIONS.length - 1) {
+        currentIndex++;
+        renderQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      const totals = {
+        TECH: 0,
+        FORCE: 0,
+        GOV: 0,
+        MED: 0,
+        BIZ: 0,
+        DATA: 0,
+        ART: 0,
+        PEOPLE: 0
+      };
+
+      userAnswers.forEach((optIdx, qIdx) => {
+        if (optIdx !== null) {
+          const scores = QUESTIONS[qIdx].opts[optIdx].scores;
+          for (const key in scores) {
+            totals[key] += scores[key];
+          }
+        }
+      });
+
+      const sorted = Object.entries(totals).sort((a, b) => b[1] - a[1]);
+      const [top1Code, top1Score] = sorted[0];
+      const [top2Code, top2Score] = sorted[1];
+
+      const top1 = SPHERES[top1Code];
+      const top2 = SPHERES[top2Code];
+
+      setScreen("result");
+      document.getElementById("status-msg").textContent = "";
+
+      document.getElementById("result-greeting").textContent =
+        userName !== "Участник" ? `${userName}, ваш результат готов` : "Ваш результат готов";
+
+      document.getElementById("result-hero").innerHTML = `
+        <div class="hero-tag">Главная сфера · ${top1Score} из ${MAX_POSSIBLE_SCORE} баллов</div>
+        <div class="main-sphere">${top1.title}</div>
+        <div class="second-sphere">Вторая сфера: ${top2.title} (${top2Score} б.)</div>
+        <p style="color: #e2e8f0; margin-bottom: 8px;">${top1.desc}</p>
+        <div class="examples-box">
+          <strong>Примеры направлений:</strong> ${top1.examples}.<br />
+          <span style="color: var(--muted);">Вторая сфера («${top2.title}»): ${top2.examples}.</span>
+        </div>
+      `;
+
+      const barsContainer = document.getElementById("bars-container");
+      barsContainer.innerHTML = "";
+
+      sorted.forEach(([code, score]) => {
+        const widthPct = Math.min(100, Math.round((score / MAX_POSSIBLE_SCORE) * 100));
+        barsContainer.innerHTML += `
+          <div class="bar-item">
+            <div class="bar-head">
+              <span>${SPHERES[code].title}</span>
+              <span class="bar-score">${score} б.</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width: ${widthPct}%;"></div>
+            </div>
+          </div>
+        `;
+      });
+
+      lastReportText =
+        `Привет, Турар! Я прошёл твой профтест.\n` +
+        `Имя: ${userName}\n` +
+        `Главная сфера: ${top1.title} (${top1Score} б.)\n` +
+        `Вторая сфера: ${top2.title} (${top2Score} б.)`;
+
+      const waUrl = `https://api.whatsapp.com/send?phone=${TARGET_WHATSAPP}&text=${encodeURIComponent(lastReportText)}`;
+      document.getElementById("wa-share-link").href = waUrl;
+    }
+
+    function copyReport() {
+      if (!lastReportText) return;
+      navigator.clipboard.writeText(lastReportText).then(() => {
+        document.getElementById("status-msg").textContent = "Отчёт скопирован.";
+      }).catch(() => {
+        document.getElementById("status-msg").textContent = "Скопируйте текст вручную.";
+      });
+    }
+
+    function restartTest() {
+      setScreen("start");
+    }
+  </script>
+</body>
+</html>
